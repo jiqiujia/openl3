@@ -30,7 +30,7 @@ POOLINGS = {
 }
 
 
-def load_embedding_model(input_repr, content_type, embedding_size):
+def load_embedding_model(input_repr, content_type, embedding_size, model_dir=None):
     """
     Returns a model with the given characteristics. Loads the model
     if the model has not been loaded yet.
@@ -55,7 +55,7 @@ def load_embedding_model(input_repr, content_type, embedding_size):
         warnings.simplefilter("ignore")
         m = MODELS[input_repr]()
 
-    m.load_weights(load_embedding_model_path(input_repr, content_type))
+    m.load_weights(load_embedding_model_path(input_repr, content_type, model_dir))
 
     # Pooling for final output embedding size
     pool_size = POOLINGS[input_repr][embedding_size]
@@ -65,7 +65,7 @@ def load_embedding_model(input_repr, content_type, embedding_size):
     return m
 
 
-def load_embedding_model_path(input_repr, content_type):
+def load_embedding_model_path(input_repr, content_type, model_dir=None):
     """
     Returns the local path to the model weights file for the model
     with the given characteristics
@@ -82,9 +82,12 @@ def load_embedding_model_path(input_repr, content_type):
     output_path : str
         Path to given model object
     """
-
-    return os.path.join(os.path.dirname(__file__),
-                        'openl3_audio_{}_{}.h5'.format(input_repr, content_type))
+    if model_dir is None:
+        return os.path.join(os.path.dirname(__file__),
+                            'openl3_audio_{}_{}.h5'.format(input_repr, content_type))
+    else:
+        return os.path.join(model_dir,
+                            'openl3_audio_{}_{}.h5'.format(input_repr, content_type))
 
 
 def _construct_linear_audio_network():

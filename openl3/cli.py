@@ -42,7 +42,7 @@ def get_file_list(input_list):
 
 
 def run(inputs, output_dir=None, suffix=None, input_repr="mel256", content_type="music",
-        embedding_size=6144, center=True, hop_size=0.1, verbose=False):
+        embedding_size=6144, center=True, hop_size=0.1, verbose=False, model_dir=None):
     """
     Computes and saves L3 embedding for given inputs.
 
@@ -86,7 +86,7 @@ def run(inputs, output_dir=None, suffix=None, input_repr="mel256", content_type=
         sys.exit(-1)
 
     # Load model
-    model = load_embedding_model(input_repr, content_type, embedding_size)
+    model = load_embedding_model(input_repr, content_type, embedding_size, model_dir=model_dir)
 
     # Process all files in the arguments
     for filepath in file_list:

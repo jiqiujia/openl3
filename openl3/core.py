@@ -35,7 +35,7 @@ def _pad_audio(audio, frame_len, hop_len):
     return audio
 
 
-def get_embedding(audio, sr, model=None, input_repr="mel256",
+def get_embedding(audio, sr, model=None, model_dir=None, input_repr="mel256",
                   content_type="music", embedding_size=6144,
                   center=True, hop_size=0.1, verbose=1):
     """
@@ -120,7 +120,7 @@ def get_embedding(audio, sr, model=None, input_repr="mel256",
 
     # Get embedding model
     if model is None:
-        model = load_embedding_model(input_repr, content_type, embedding_size)
+        model = load_embedding_model(input_repr, content_type, embedding_size, model_dir)
 
     audio_len = audio.size
     frame_len = TARGET_SR
@@ -155,7 +155,7 @@ def get_embedding(audio, sr, model=None, input_repr="mel256",
 
 def process_file(filepath, output_dir=None, suffix=None, model=None,
                  input_repr="mel256", content_type="music",
-                 embedding_size=6144, center=True, hop_size=0.1, verbose=True):
+                 embedding_size=6144, center=True, hop_size=0.1, verbose=True, model_dir=None):
     """
     Computes and saves L3 embedding for given audio file
 
@@ -212,7 +212,8 @@ def process_file(filepath, output_dir=None, suffix=None, model=None,
     embedding, ts = get_embedding(audio, sr, model=model, input_repr=input_repr,
                                   content_type=content_type,
                                   embedding_size=embedding_size, center=center,
-                                  hop_size=hop_size, verbose=1 if verbose else 0)
+                                  hop_size=hop_size, verbose=1 if verbose else 0,
+                                  model_dir=model_dir)
 
     np.savez(output_path, embedding=embedding, timestamps=ts)
     assert os.path.exists(output_path)
